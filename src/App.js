@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import './App.css';
+import HomePage from './components/HomePage'
 
 import { withStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
@@ -35,11 +36,11 @@ class App extends Component {
     const { classes } = this.props
     return (
       <div className="Online Gradebook">
-        <header className="Sign-in">
-        <AppBar position="static" className={classes.root}>
+        <div className="Header">
+          <AppBar position="static" className={classes.root}>
             <Toolbar>
               <Typography variant="h6" color="inherit" className={classes.title}>
-                CodeHub
+                Gradebook
               </Typography>
               {this.state.authenticated 
                 ? <Button onClick={() => this.logout()}>Logout</Button>
@@ -47,7 +48,10 @@ class App extends Component {
               }
             </Toolbar>
           </AppBar>
-        </header>
+        </div>
+        <div classname="Body">
+        {this.state.authenticated ? <HomePage database={database} user={this.state.user}/> : <p></p>}
+        </div>
       </div>
     );
   }
@@ -81,9 +85,9 @@ class App extends Component {
               loggedIn: true
             })
           } else {
-              users.orderByChild("uid").on("child_added", snapshot1 => {
-                  if( snapshot1.val().uid === result.user.uid) {
-                    database.database().ref("/users/" + snapshot1.key + "/loggedIn").set(true)
+              users.orderByChild("uid").on("child_added", snapshotUID => {
+                  if( snapshotUID.val().uid === result.user.uid) {
+                    database.database().ref("/users/" + snapshotUID.key + "/loggedIn").set(true)
                   }
               })
             }
